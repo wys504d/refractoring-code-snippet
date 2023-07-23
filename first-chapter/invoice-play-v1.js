@@ -7,15 +7,13 @@ const plays = require('./play.json')
 // console.log(plays)
 function statement(invoice, plays) {
   //    console.log(invoice)
-  let totalAmount = 0;
-  let volumeCredits = 0;
+  // let totalAmount = 0;
   let result = `Statement for ${invoice.customer}\n`;
   for (let perf of invoice.performances) {
     // print line for this order
-    result += ` ${playFor(perf).name}: ${usd(amountFor(perf) / 100)} (${perf.audience} seats)\n`;
-    totalAmount += amountFor(perf);
+    result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
   }
-  result += `Amount owed is ${usd(totalAmount / 100)}\n`;
+  result += `Amount owed is ${usd(totalAmount())}\n`;
   result += `You earned ${totalVolumeCredit()} credits\n`;
   return result;
 }
@@ -58,7 +56,7 @@ function usd(aNumber){
     {
       style: "currency", currency: "USD",
       minimumFractionDigits: 2
-    }).format(aNumber);
+    }).format(aNumber/100);
 }
 
 function totalVolumeCredit(){
@@ -67,6 +65,14 @@ function totalVolumeCredit(){
     result += volumeCreditFor(perf)
   }
   return result
+}
+
+function totalAmount(){
+  let result = 0;
+  for(let perl of invoice.performances){
+    result += amountFor(perl)
+  }
+  return result;
 }
 
 console.log(statement(invoice, plays))
