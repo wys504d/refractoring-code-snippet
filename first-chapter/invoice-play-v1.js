@@ -11,13 +11,12 @@ function statement(invoice, plays) {
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
   for (let perf of invoice.performances) {
-    volumeCredits += volumeCreditFor(perf)
     // print line for this order
     result += ` ${playFor(perf).name}: ${usd(amountFor(perf) / 100)} (${perf.audience} seats)\n`;
     totalAmount += amountFor(perf);
   }
   result += `Amount owed is ${usd(totalAmount / 100)}\n`;
-  result += `You earned ${volumeCredits} credits\n`;
+  result += `You earned ${totalVolumeCredit()} credits\n`;
   return result;
 }
 
@@ -61,5 +60,14 @@ function usd(aNumber){
       minimumFractionDigits: 2
     }).format(aNumber);
 }
+
+function totalVolumeCredit(){
+  let result = 0;
+  for(let perf of invoice.performances){
+    result += volumeCreditFor(perf)
+  }
+  return result
+}
+
 console.log(statement(invoice, plays))
 
